@@ -1,0 +1,24 @@
+{
+  "name": "horselord",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "description": "Endpoint for knowing who the horselord is.",
+  "author": {
+    "name": "Ramy the Horselord "
+  },
+  "keywords": [
+    "node",
+    "horselord"
+  ],
+  "dependencies": {
+    "body-parser": "~1.8.1",
+    "express": "~4.9.0"
+  },
+  "devDependencies": {
+  },
+  "engines": {
+    "node": ">=0.12.2"
+  }
+}
