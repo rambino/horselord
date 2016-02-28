@@ -17,7 +17,16 @@ app.get('/who', function(req, res) {
     } else {
       var msg = 'Incorrect, ' + req.query.text + ' is not the horselord. Ramy is the horselord.';
     }
-    res.send(msg);
+    var answer = {
+      "response_type": "in_channel",
+      "text": msg,
+      "attachments": [
+          {
+              "text":"...and always will be."
+          }
+      ]
+    };
+    res.send(answer);
 });
 
 //app.use(express.static(__dirname, 'images'));
