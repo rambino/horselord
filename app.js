@@ -13,7 +13,7 @@ app.get('/who', function(req, res) {
   var msg = 'Ramy is the horselord';
   if (req.query.text.toLowerCase() == 'ramy') {
     msg = 'Correct, ' + msg;
-  } else {
+  } else if (req.query.text != '') {
     msg = 'Incorrect, ' + req.query.text + ' is not the horselord. ' + msg;
   }
   var answer = {
