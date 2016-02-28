@@ -29,8 +29,6 @@ app.get('/who', function(req, res) {
     res.send(answer);
 });
 
-//app.use(express.static(__dirname, 'images'));
-
 var server = app.listen(3009);
 console.log('server started');
 
