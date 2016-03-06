@@ -28,5 +28,24 @@ app.get('/who', function(req, res) {
   res.send(answer);
 });
 
+app.get('/oreo', function(req, res) {
+  var msg = 'Joe is the oreolord';
+  if (req.query.text.toLowerCase() == 'joe') {
+    msg = 'Correct, ' + msg;
+  } else if (req.query.text != '') {
+    msg = 'Incorrect, ' + req.query.text + ' is not the horselord. ' + msg;
+  }
+  var answer = {
+    "response_type": "in_channel",
+    "text": msg,
+    "attachments": [
+      {
+          "text":"...and always will be."
+      }
+    ]
+  };
+  res.send(answer);
+});
+
 var server = app.listen(3009);
 console.log('server started');
