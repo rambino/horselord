@@ -57,7 +57,7 @@ app.get('/net', function(req, res) {
     "text": msg,
     "attachments": [
       {
-          "img_url":"https://giphy.com/gifs/horselord-l2JJClemzArq8PFwQ"
+          "img_url":"https://media.giphy.com/media/l2JJClemzArq8PFwQ/giphy.gif"
       }
     ]
   };
