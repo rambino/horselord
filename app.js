@@ -47,5 +47,22 @@ app.get('/oreo', function(req, res) {
   res.send(answer);
 });
 
+app.get('/net', function(req, res) {
+  var msg = 'Nothing but net';
+  if (req.query.text != '') {
+    msg = req.query.text;
+  }
+  var answer = {
+    "response_type": "in_channel",
+    "text": msg,
+    "attachments": [
+      {
+          "img_url":"https://giphy.com/gifs/horselord-l2JJClemzArq8PFwQ"
+      }
+    ]
+  };
+  res.send(answer);
+});
+
 var server = app.listen(3009);
 console.log('server started');
