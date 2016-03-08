@@ -56,8 +56,8 @@ app.get('/net', function(req, res) {
     "response_type": "in_channel",
     "text": msg,
     "attachments": [
-      {
-          "image_url":"https://media.giphy.com/media/l2JJClemzArq8PFwQ/giphy.gif"
+      {   "fallback" : "Awesome gif of the H.O.R.S.E.Lord nailing a sweet shot." //apparently required by slack but not in docs
+          "image_url": "https://media.giphy.com/media/3o7abIyqT0HMHq4oJq/giphy.gif"
       }
     ]
   };
