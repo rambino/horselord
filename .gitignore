@@ -38,3 +38,5 @@ node_modules
 !.elasticbeanstalk/*.global.yml
 
 .env
+
+.ebextensions/02-environmentvariables.config
