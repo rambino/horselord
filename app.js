@@ -101,7 +101,7 @@ var bot = controller.spawn({
     token: process.env.SLACK_CATIPHY_TOKEN
 }).startRTM();
 
-controller.hears(['/giphy'], 'direct_message,direct_mention,mention', function(bot, message) {
+controller.hears(['/giphy'], 'direct_message,direct_mention,mention,ambient', function(bot, message) {
   var catMsg = catiphy(message.text);
   getGiphy(catMsg, function (err, giphyInfo) {
     if (err) {
