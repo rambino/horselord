@@ -1,5 +1,11 @@
+var dotenv = require('dotenv'); //must be 1st
+dotenv.load(); //must be 2nd
+
 var express = require('express');
 var bodyParser = require('body-parser');
+var Botkit = require('./node_modules/botkit/lib/Botkit.js');
+var os = require('os');
+var request = require('request');
 
 var app = express();
 
@@ -74,9 +80,6 @@ function catiphy (origMsgTxt) {
   return y;
 }
 
-
-var request = require('request');
-
 function getGiphy (searchTerm, cb) {
   var baseUrl = 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=';
   var reqUrl = baseUrl + encodeURIComponent(searchTerm);
@@ -90,17 +93,13 @@ function getGiphy (searchTerm, cb) {
   })
 }
 
-var Botkit = require('./node_modules/botkit/lib/Botkit.js');
-var os = require('os');
-
 var controller = Botkit.slackbot({
     debug: false
 });
 
 var bot = controller.spawn({
-    token: 'xoxb-64483594707-o9yAyKktcLZmKKW6BFlu5U53'
+    token: process.env.SLACK_CATIPHY_TOKEN
 }).startRTM();
-
 
 controller.hears(['/giphy'], 'direct_message,direct_mention,mention', function(bot, message) {
   var catMsg = catiphy(message.text);
