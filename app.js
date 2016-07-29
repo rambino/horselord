@@ -64,5 +64,78 @@ app.get('/net', function(req, res) {
   res.send(answer);
 });
 
+
+// CATIPHY STUFFF --------------------
+
+function catiphy (origMsgTxt) {
+  var x = origMsgTxt.indexOf('/');
+  var y = origMsgTxt.substr(x+6,origMsgTxt.length - x);
+  y = 'cat' + y;
+  return y;
+}
+
+
+var request = require('request');
+
+function getGiphy (searchTerm, cb) {
+  var baseUrl = 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=';
+  var reqUrl = baseUrl + encodeURIComponent(searchTerm);
+  console.log(reqUrl);
+  request(reqUrl, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      cb(null, body);
+    } else {
+      cb(true);
+    }
+  })
+}
+
+var Botkit = require('./node_modules/botkit/lib/Botkit.js');
+var os = require('os');
+
+var controller = Botkit.slackbot({
+    debug: false
+});
+
+var bot = controller.spawn({
+    token: 'xoxb-64483594707-o9yAyKktcLZmKKW6BFlu5U53'
+}).startRTM();
+
+
+controller.hears(['/giphy'], 'direct_message,direct_mention,mention', function(bot, message) {
+  var catMsg = catiphy(message.text);
+  getGiphy(catMsg, function (err, giphyInfo) {
+    if (err) {
+      console.log('something went wrong with giphy');
+    } else {
+      giphyInfo = JSON.parse(giphyInfo);
+      bot.api.reactions.add({
+          timestamp: message.ts,
+          channel: message.channel,
+          name: 'robot_face',
+      }, function(err, res) {
+          if (err) {
+              bot.botkit.log('Failed to add emoji reaction :(', err);
+          }
+      });
+
+      controller.storage.users.get(message.user, function(err, user) {
+        var respMsg = 'I think you meant to say: /giphy ' + catMsg;
+        var replyPayload = {
+          'text': respMsg,
+          'attachments' : [
+            {
+              'fallback'  : 'giphy catiphy',
+              'image_url' : giphyInfo.data.fixed_height_downsampled_url
+            }
+          ]
+        }      
+        bot.reply(message, replyPayload);
+      });
+
+    }
+  }) 
+});
+
 var server = app.listen(3009);
 console.log('server started');

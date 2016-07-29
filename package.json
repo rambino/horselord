@@ -14,10 +14,11 @@
   ],
   "dependencies": {
     "body-parser": "~1.8.1",
-    "express": "~4.9.0"
+    "botkit": "^0.2.2",
+    "express": "~4.9.0",
+    "request": "^2.74.0"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "engines": {
     "node": ">=0.12.2"
   }
