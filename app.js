@@ -119,7 +119,7 @@ controller.hears(['/giphy'], 'direct_message,direct_mention,mention,ambient', fu
       });
 
       controller.storage.users.get(message.user, function(err, user) {
-        var respMsg = 'I think you meant to say: /giphy ' + catMsg + '\nSam does not like me';
+        var respMsg = 'I think you meant to say: /giphy ' + catMsg;
         var replyPayload = {
           'text': respMsg,
           'attachments' : [
