@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 var Botkit = require('./node_modules/botkit/lib/Botkit.js');
 var os = require('os');
 var request = require('request');
+var async = require('async');
 
 var app = express();
 
@@ -74,10 +75,13 @@ app.get('/net', function(req, res) {
 // CATIPHY STUFFF --------------------
 
 function catiphy (origMsgTxt) {
-  var x = origMsgTxt.indexOf('/');
-  var y = origMsgTxt.substr(x+6,origMsgTxt.length - x);
-  y = 'cat' + y;
-  return y;
+  var x = origMsgTxt.indexOf('giphy');
+  var y = origMsgTxt.substr(x+5,origMsgTxt.length - x);
+  var z = [];
+  z.push(y);
+  z.push('cat' + y);
+
+  return z;
 }
 
 function getGiphy (searchTerm, cb) {
@@ -101,39 +105,58 @@ var bot = controller.spawn({
     token: process.env.SLACK_CATIPHY_TOKEN
 }).startRTM();
 
-controller.hears(['/giphy'], 'direct_message,direct_mention,mention,ambient', function(bot, message) {
-  var catMsg = catiphy(message.text);
-  getGiphy(catMsg, function (err, giphyInfo) {
-    if (err) {
-      console.log('something went wrong with giphy');
-    } else {
-      giphyInfo = JSON.parse(giphyInfo);
-      bot.api.reactions.add({
-          timestamp: message.ts,
-          channel: message.channel,
-          name: 'robot_face',
-      }, function(err, res) {
-          if (err) {
-              bot.botkit.log('Failed to add emoji reaction :(', err);
+controller.hears('giphy', ['direct_message,direct_mention,mention,ambient,message_received'], function(bot, message) {
+  console.log(message);
+  var msgs = catiphy(message.text);
+  console.log("msgs: ", msgs);
+  async.each(msgs, function (msg, callback) {
+    console.log("msg: ", msg);
+    getGiphy(msg, function (err, giphyInfo) {
+      if (err) {
+        console.log('something went wrong with giphy');
+      } else {
+        giphyInfo = JSON.parse(giphyInfo);
+        if (msgs.indexOf(msg) === 0) {
+          bot.api.reactions.add({
+              timestamp: message.ts,
+              channel: message.channel,
+              name: 'robot_face',
+          }, function(err, res) {
+              if (err) {
+                  bot.botkit.log('Failed to add emoji reaction :(', err);
+              }
+          });  
+        }
+        
+        controller.storage.users.get(message.user, function(err, user) {
+          if (msgs.indexOf(msg) === 0) {
+            var respMsg = '/giphy ' + msg;  
+          } else {
+            var respMsg = 'I think you meant to say: /giphy ' + msg;
           }
-      });
+          
+          var replyPayload = {
+            'text': respMsg,
+            'attachments' : [
+              {
+                'fallback'  : 'giphy catiphy',
+                'image_url' : giphyInfo.data.fixed_height_downsampled_url
+              }
+            ]
+          }      
+          bot.reply(message, replyPayload);
+        });
 
-      controller.storage.users.get(message.user, function(err, user) {
-        var respMsg = 'I think you meant to say: /giphy ' + catMsg;
-        var replyPayload = {
-          'text': respMsg,
-          'attachments' : [
-            {
-              'fallback'  : 'giphy catiphy',
-              'image_url' : giphyInfo.data.fixed_height_downsampled_url
-            }
-          ]
-        }      
-        bot.reply(message, replyPayload);
-      });
-
+      }
+    });
+    setTimeout( function(){}, 3000);
+  }, function (err) {
+    if (err) {
+      console.log('something went wrong with giphy: ', err);
+    } else {
+      console.log('all msgs processed');
     }
-  }) 
+  });
 });
 
 var server = app.listen(3009);
