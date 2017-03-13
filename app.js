@@ -98,7 +98,8 @@ function getGiphy (searchTerm, cb) {
 }
 
 var controller = Botkit.slackbot({
-    debug: false
+    debug: false,
+    retry: 20
 });
 
 var bot = controller.spawn({
