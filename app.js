@@ -71,6 +71,10 @@ app.get('/net', function(req, res) {
   res.send(answer);
 });
 
+//aws health check
+app.get('/health', function(req, res) {
+  res.sendStatus(200);
+});
 
 // CATIPHY STUFFF --------------------
 
