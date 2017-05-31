@@ -110,6 +110,15 @@ var bot = controller.spawn({
     token: process.env.SLACK_CATIPHY_TOKEN
 }).startRTM();
 
+controller.hears('TEST TEST TEST', ['direct_message,direct_mention,mention,ambient,message_received'], function (bot, message) {
+  controller.storage.users.get(message.user, function(err, user){
+    var replyPayload = {
+      'text': 'I think you meant to say: TEST TEST TEST TEST',
+    };
+    bot.reply(message, replyPayload);
+  });
+});
+
 controller.hears('giphy', ['direct_message,direct_mention,mention,ambient,message_received'], function(bot, message) {
   console.log(message);
   var msgs = catiphy(message.text);
